@@ -21,7 +21,7 @@ public class WalkStep implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6436808745713888517L;
-	public enum RelativeDirection { HARD_LEFT, LEFT, SLIGHTLY_LEFT, CONTINUE, SLIGHTLY_RIGHT, RIGHT, CIRCLE_CLOCKWISE, CIRCLE_COUNTERCLOCKWISE }	
+	public enum RelativeDirection { HARD_LEFT, LEFT, SLIGHTLY_LEFT, CONTINUE, HARD_RIGHT, RIGHT ,SLIGHTLY_RIGHT, CIRCLE_CLOCKWISE, CIRCLE_COUNTERCLOCKWISE }	
 	public enum AbsoluteDirection { NORTH,NORTHEAST,EAST,SOUTHEAST,SOUTH,SOUTHWEST,WEST,NORTHWEST}	
 	private double distance;
 	private Location location;
