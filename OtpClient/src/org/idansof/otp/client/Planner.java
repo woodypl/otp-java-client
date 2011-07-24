@@ -34,6 +34,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.net.Uri;
 import android.net.http.AndroidHttpClient;
+import android.util.Log;
 
 public class Planner {
 	
@@ -70,11 +71,13 @@ public class Planner {
 		AndroidHttpClient androidHttpClient = AndroidHttpClient.newInstance("");
 		HttpProtocolParams.setContentCharset(androidHttpClient.getParams(), "utf-8");
 		String uri = builder.build().toString();
+		Log.i(Planner.class.toString(),"Fetching plan from "+uri);
 		HttpUriRequest httpUriRequest = new HttpGet(	uri);
 		httpUriRequest.setHeader("Accept", "text/xml");
 		HttpResponse httpResponse = androidHttpClient.execute(httpUriRequest);
 		
 		InputStream contentStream = httpResponse.getEntity().getContent();
+		Log.i(Planner.class.toString(),"Parsing content , size :"+httpResponse.getEntity().getContentLength());
 		
 		return parseXMLResponse(contentStream);		
 	}
