@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -40,23 +41,27 @@ public class Planner {
 	
 	
 	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-	private static final String DATE_FORMAT = "d-M-y";
-	private static final String TIME_FORMAT = "H:m";
+	private Locale locale;
 	
 	private String host;
 	private static final String uri = "opentripplanner-api-webapp/ws/plan";
 	
 	public Planner(String host) {
+		this(host,Locale.getDefault());
+	}
+	
+	public Planner(String host,Locale locale) {
 		super();
 		this.host = host;
+		this.locale = locale;
 	}
 
 	
 	public PlanResult generatePlan(PlanRequest planRequest) throws IOException, XmlPullParserException, ParseException
 	{
 		
-		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-		DateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT,locale);
+		DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,locale);
 		
 		
 		Uri.Builder builder =  new Uri.Builder();
