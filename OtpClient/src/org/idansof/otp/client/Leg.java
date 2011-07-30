@@ -25,7 +25,7 @@ public class Leg  implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -5573418733774689997L;
-	public enum Mode {  WALK, BUS};
+	public enum Mode {  WALK, TRAM, SUBWAY, RAIL, BUS, FERRY, CABLE_CAR, GONDOLA, FUNICULAR, TRANSIT};
 	
 	private String route;
 	private Mode mode;
