@@ -44,19 +44,26 @@ public class Geocoder {
 
 	public GeocoderResult geodecode(String address) throws IOException, XmlPullParserException
 	{
-		Uri.Builder builder =  new Uri.Builder();
-		builder.scheme("http");
-		builder.authority(host);
-		builder.appendEncodedPath(uri);
-		builder.appendQueryParameter("address",address);
-		
 		AndroidHttpClient androidHttpClient = AndroidHttpClient.newInstance("");
-		HttpProtocolParams.setContentCharset(androidHttpClient.getParams(), "utf-8");
-		HttpUriRequest httpUriRequest = new HttpGet(	builder.build().toString());
-		HttpResponse httpResponse = androidHttpClient.execute(httpUriRequest);
-		
-		InputStream contentStream = httpResponse.getEntity().getContent();
-		return parseXMLResponse(contentStream);
+		try
+		{
+			Uri.Builder builder =  new Uri.Builder();
+			builder.scheme("http");
+			builder.authority(host);
+			builder.appendEncodedPath(uri);
+			builder.appendQueryParameter("address",address);
+			
+			HttpProtocolParams.setContentCharset(androidHttpClient.getParams(), "utf-8");
+			HttpUriRequest httpUriRequest = new HttpGet(	builder.build().toString());
+			HttpResponse httpResponse = androidHttpClient.execute(httpUriRequest);
+			
+			InputStream contentStream = httpResponse.getEntity().getContent();
+			return parseXMLResponse(contentStream);
+		}
+		finally
+		{
+			androidHttpClient.close();			
+		}
 	}
 	
 	private GeocoderResult parseXMLResponse(InputStream contentStream) throws IOException, XmlPullParserException

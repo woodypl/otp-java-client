@@ -60,31 +60,38 @@ public class Planner {
 	public PlanResult generatePlan(PlanRequest planRequest) throws IOException, XmlPullParserException, ParseException
 	{
 		
-		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT,locale);
-		DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,locale);
-		
-		
-		Uri.Builder builder =  new Uri.Builder();
-		builder.scheme("http");
-		builder.authority(host);
-		builder.appendEncodedPath(uri);
-		builder.appendQueryParameter("fromPlace",planRequest.getFrom().getCoordinateString());		
-		builder.appendQueryParameter("toPlace",planRequest.getTo().getCoordinateString());		
-		builder.appendQueryParameter("date",dateFormat.format(planRequest.getDate()));		
-		builder.appendQueryParameter("time",timeFormat.format(planRequest.getDate()));		
-		
 		AndroidHttpClient androidHttpClient = AndroidHttpClient.newInstance("");
-		HttpProtocolParams.setContentCharset(androidHttpClient.getParams(), "utf-8");
-		String uri = builder.build().toString();
-		Log.i(Planner.class.toString(),"Fetching plan from "+uri);
-		HttpUriRequest httpUriRequest = new HttpGet(	uri);
-		httpUriRequest.setHeader("Accept", "text/xml");
-		HttpResponse httpResponse = androidHttpClient.execute(httpUriRequest);
-		
-		InputStream contentStream = httpResponse.getEntity().getContent();
-		Log.i(Planner.class.toString(),"Parsing content , size :"+httpResponse.getEntity().getContentLength());
-		
-		return parseXMLResponse(contentStream);		
+		try
+		{
+			
+			DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT,locale);
+			DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,locale);
+			
+			
+			Uri.Builder builder =  new Uri.Builder();
+			builder.scheme("http");
+			builder.authority(host);
+			builder.appendEncodedPath(uri);
+			builder.appendQueryParameter("fromPlace",planRequest.getFrom().getCoordinateString());		
+			builder.appendQueryParameter("toPlace",planRequest.getTo().getCoordinateString());		
+			builder.appendQueryParameter("date",dateFormat.format(planRequest.getDate()));		
+			builder.appendQueryParameter("time",timeFormat.format(planRequest.getDate()));		
+			
+			HttpProtocolParams.setContentCharset(androidHttpClient.getParams(), "utf-8");
+			String uri = builder.build().toString();
+			Log.i(Planner.class.toString(),"Fetching plan from "+uri);
+			HttpUriRequest httpUriRequest = new HttpGet(	uri);
+			httpUriRequest.setHeader("Accept", "text/xml");
+			HttpResponse httpResponse = androidHttpClient.execute(httpUriRequest);
+			
+			InputStream contentStream = httpResponse.getEntity().getContent();
+			Log.i(Planner.class.toString(),"Parsing content , size :"+httpResponse.getEntity().getContentLength());			
+			return parseXMLResponse(contentStream);		
+		}
+		finally
+		{
+			androidHttpClient.close();		
+		}
 	}
 	
 	private PlanResult parseXMLResponse(InputStream contentStream) throws IOException, XmlPullParserException, ParseException
