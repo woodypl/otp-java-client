@@ -33,13 +33,14 @@ import android.net.http.AndroidHttpClient;
 public class Geocoder {
 	
 	private String host;
-	private static final String uri = "opentripplanner-geocoder/geocode";
+	private String uri = "opentripplanner-geocoder/geocode";
 	
 	
 	
-	public Geocoder(String host) {
+	public Geocoder(String host,String uri) {
 		super();
 		this.host = host;
+		this.uri = uri;
 	}
 
 	public GeocoderResult geodecode(String address) throws IOException, XmlPullParserException

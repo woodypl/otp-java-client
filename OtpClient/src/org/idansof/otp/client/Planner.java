@@ -44,14 +44,15 @@ public class Planner {
 	private Locale locale;
 	
 	private String host;
-	private static final String uri = "opentripplanner-api-webapp/ws/plan";
+	private String uri = "opentripplanner-api-webapp/ws/plan";
 	
-	public Planner(String host) {
-		this(host,Locale.getDefault());
+	public Planner(String host,String uri) {
+		this(host,uri,Locale.getDefault());
 	}
 	
-	public Planner(String host,Locale locale) {
+	public Planner(String host,String uri,Locale locale) {
 		super();
+		this.uri = uri;
 		this.host = host;
 		this.locale = locale;
 	}
