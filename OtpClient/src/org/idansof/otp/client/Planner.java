@@ -169,7 +169,7 @@ public class Planner {
 		    	}
 		    	else
 		    	{
-		    		pullParser.nextText();
+		    		parseUnsupportedElement(pullParser);
 		    	}
 	    	}
 	    	
@@ -226,12 +226,7 @@ public class Planner {
 		    	}
 		    	else
 		    	{
-		    		String tagName = pullParser.getName();
-		    		// Jump the end of this section
-		    		do
-		    		{
-		    			pullParser.next();
-		    		} while(pullParser.getEventType()!=XmlPullParser.END_TAG || !pullParser.getName().equals(tagName));
+		    		parseUnsupportedElement(pullParser);
 		    	}
 	    	}
 	    	
@@ -241,6 +236,30 @@ public class Planner {
 		
 		
 		
+	}
+	
+	/**
+	 * Parse elements we do not recognize. Just walk the subtree until we reach the END_TAG which started it - useful for forward compatability
+	 * 
+	 * Assumes the pull parser currently points to the START_TAG of the element
+	 * 
+	 * When this method returns the pull parser will be positioned at the END_TAG of the element
+	 * 
+	 * @param pullParser
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private void parseUnsupportedElement(XmlPullParser pullParser) throws XmlPullParserException, IOException
+	{
+		int open_tags = 1;
+		do
+		{
+			int event = pullParser.next();
+			if (event == XmlPullParser.START_TAG)
+				++open_tags;
+			if (event == XmlPullParser.END_TAG)
+				--open_tags;			
+		} while(open_tags>0);
 	}
 
 	private void parseGeometry(XmlPullParser pullParser,
@@ -327,7 +346,7 @@ public class Planner {
 		    	}
 		    	else
 		    	{
-		    		pullParser.nextText();
+		    		parseUnsupportedElement(pullParser);
 		    	}
 	    	}
 	    	
@@ -355,18 +374,9 @@ public class Planner {
 	    	{
 	    		longitude = Double.parseDouble(pullParser.nextText());
 	    	}
-	    	else if (pullParser.getName().equals("stopId"))
-	    	{
-	    		// Skip this subtree
-	    		do
-	    		{
-	    			pullParser.next();
-	    			
-	    		} while(pullParser.getEventType()!=XmlPullParser.END_TAG || !pullParser.getName().equals( "stopId"));
-	    	}
 	    	else
 	    	{
-	    		pullParser.nextText();	    		
+	    		parseUnsupportedElement(pullParser);
 	    	}
 	    	
 
