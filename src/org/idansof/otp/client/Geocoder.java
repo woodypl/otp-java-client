@@ -48,10 +48,9 @@ public class Geocoder {
 		AndroidHttpClient androidHttpClient = AndroidHttpClient.newInstance("");
 		try
 		{
-			Uri.Builder builder =  new Uri.Builder();
-			builder.scheme("http");
-			builder.authority(host);
+			Uri.Builder builder = Uri.parse("http://"+host).buildUpon();
 			builder.appendEncodedPath(uri);
+
 			builder.appendQueryParameter("address",address);
 			
 			HttpProtocolParams.setContentCharset(androidHttpClient.getParams(), "utf-8");

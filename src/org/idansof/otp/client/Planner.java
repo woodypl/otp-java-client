@@ -40,7 +40,7 @@ import android.util.Log;
 public class Planner {
 	
 	
-	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	private Locale locale;
 	
 	private String host;
@@ -69,9 +69,8 @@ public class Planner {
 			DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,locale);
 			
 			
-			Uri.Builder builder =  new Uri.Builder();
-			builder.scheme("http");
-			builder.authority(host);
+			Uri.Builder builder = Uri.parse("http://"+host).buildUpon();
+
 			builder.appendEncodedPath(uri);
 			builder.appendQueryParameter("fromPlace",planRequest.getFrom().getCoordinateString());		
 			builder.appendQueryParameter("toPlace",planRequest.getTo().getCoordinateString());		
