@@ -35,11 +35,14 @@ public class Geocoder {
 	private String host;
 	private String uri = "opentripplanner-geocoder/geocode";
 	
+	public Geocoder(String host) {
+		super();
+		this.host = host;
+	}
 	
 	
 	public Geocoder(String host,String uri) {
-		super();
-		this.host = host;
+		this(host);
 		this.uri = uri;
 	}
 

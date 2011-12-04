@@ -41,19 +41,23 @@ public class Planner {
 	
 	
 	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-	private Locale locale;
 	
+	private Locale locale = Locale.getDefault();
 	private String host;
 	private String uri = "opentripplanner-api-webapp/ws/plan";
 	
+	public Planner(String host) {
+		super();
+		this.host = host;
+	}
+	
 	public Planner(String host,String uri) {
-		this(host,uri,Locale.getDefault());
+		this(host);
+		this.uri = uri;
 	}
 	
 	public Planner(String host,String uri,Locale locale) {
-		super();
-		this.uri = uri;
-		this.host = host;
+		this(host, uri);
 		this.locale = locale;
 	}
 
