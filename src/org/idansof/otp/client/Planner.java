@@ -39,12 +39,15 @@ import android.util.Log;
 
 public class Planner {
 	
-	
-	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+	private static final String ZULU_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 	
 	private Locale locale = Locale.getDefault();
 	private String host;
 	private String uri = "opentripplanner-api-webapp/ws/plan";
+	
+	DateFormat dateTimeFormat = new SimpleDateFormat(DATETIME_FORMAT);
+	DateFormat zuluDateTimeFormat = new SimpleDateFormat(ZULU_DATETIME_FORMAT);
 	
 	public Planner(String host) {
 		super();
@@ -101,7 +104,6 @@ public class Planner {
 	private PlanResult parseXMLResponse(InputStream contentStream) throws IOException, XmlPullParserException, ParseException
 	{
 		TripPlan tripPlan = new TripPlan();
-		DateFormat dateTimeFormat = new SimpleDateFormat(DATETIME_FORMAT);
 		XmlPullParser pullParser = new KXmlParser();
 		pullParser.setInput(contentStream, "UTF-8");
 		int eventType = pullParser.getEventType();				
@@ -112,7 +114,12 @@ public class Planner {
 		if(eventType != XmlPullParser.END_DOCUMENT)
 		{
 			eventType = pullParser.nextTag(); // <date>
-			tripPlan.setDate(dateTimeFormat.parse(pullParser.nextText()));
+			String d = pullParser.nextText();
+			try {
+				tripPlan.setDate(dateTimeFormat.parse(d));
+			} catch (ParseException e) {
+				tripPlan.setDate(zuluDateTimeFormat.parse(d));
+			}
 	
 			eventType = pullParser.nextTag(); // <from>
 			tripPlan.setFrom(parseLocation(pullParser));
@@ -128,7 +135,6 @@ public class Planner {
 	private void parseItineraries(XmlPullParser pullParser,
 			List<Itinerary> itineraries) throws XmlPullParserException, IOException, ParseException {
 		
-		DateFormat dateTimeFormat = new SimpleDateFormat(DATETIME_FORMAT);
 	    while(pullParser.nextTag()==XmlPullParser.START_TAG) //<itinerary>
 	    {
 	    	Itinerary itinerary = new Itinerary();
@@ -144,11 +150,21 @@ public class Planner {
 		    	}
 		    	else if (pullParser.getName().equals("startTime"))
 		    	{
-		    		itinerary.setStartTime(dateTimeFormat.parse(pullParser.nextText()));
+		    		String d = pullParser.nextText();
+					try {
+						itinerary.setStartTime(dateTimeFormat.parse(d));
+					} catch (ParseException e) {
+						itinerary.setStartTime(zuluDateTimeFormat.parse(d));
+					}
 		    	}
 		    	else if (pullParser.getName().equals("endTime"))
 		    	{
-		    		itinerary.setEndTime(dateTimeFormat.parse(pullParser.nextText()));
+		    		String d = pullParser.nextText();
+		    		try {
+						itinerary.setEndTime(dateTimeFormat.parse(d));
+					} catch (ParseException e) {
+						itinerary.setEndTime(zuluDateTimeFormat.parse(d));
+					}
 		    	}
 		    	else if (pullParser.getName().equals("walkTime"))
 		    	{
@@ -186,7 +202,6 @@ public class Planner {
 
 
 	private void parseLegs(XmlPullParser pullParser, List<Leg> legs)  throws XmlPullParserException, IOException, ParseException {
-		DateFormat dateTimeFormat = new SimpleDateFormat(DATETIME_FORMAT);
 	    while(pullParser.nextTag()==XmlPullParser.START_TAG) //<leg>
 	    {
 	    	Leg leg = new Leg();
@@ -205,11 +220,21 @@ public class Planner {
 		    	}
 		    	else if (pullParser.getName().equals("startTime"))
 		    	{
-		    		leg.setStartTime(dateTimeFormat.parse(pullParser.nextText()));
+		    		String d = pullParser.nextText();
+		    		try {
+						leg.setStartTime(dateTimeFormat.parse(d));
+					} catch (ParseException e) {
+						leg.setStartTime(zuluDateTimeFormat.parse(d));
+					}
 		    	}
 		    	else if (pullParser.getName().equals("endTime"))
 		    	{
-		    		leg.setEndTime(dateTimeFormat.parse(pullParser.nextText()));
+		    		String d = pullParser.nextText();
+		    		try {
+						leg.setEndTime(dateTimeFormat.parse(d));
+					} catch (ParseException e) {
+						leg.setEndTime(zuluDateTimeFormat.parse(d));
+					}
 		    	}
 		    	else if (pullParser.getName().equals("from"))
 		    	{
